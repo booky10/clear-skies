@@ -1,27 +1,30 @@
 {
   "schemaVersion": 1,
-  "id": "clear-skies",
+  "id": "clearskies",
   "version": "${version}",
   "name": "Clear Skies",
   "description": "Makes horizon and fog colors match the sky",
+
   "authors": [
-    "Grondag"
+    "Grondag",
+    "booky10"
   ],
+
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/clear-skies",
-    "issues": "https://github.com/grondag/clear-skies/issues",
-    "sources": "https://github.com/grondag/clear-skies"
+    "issues": "https://github.com/booky10/clearskies/issues/",
+    "sources": "https://github.com/booky10/clearskies/"
   },
   "license": "Apache-2.0",
-  "icon": "assets/clear-skies/clear-skies-icon.png",
-  
+  "icon": "assets/clearskies/icon.png",
+
   "environment": "client",
   "mixins": [
-    "clear-skies.client.json"
+    "clearskies.mixin.json"
   ],
+
   "depends": {
-  	"fabricloader": ">=0.11.3",
-    "minecraft": "1.17.x",
-    "java": ">=16"
+    "fabricloader": ">=0.12.6",
+    "minecraft": "1.18",
+    "java": ">=17"
   }
 }
