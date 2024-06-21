@@ -16,9 +16,12 @@
 
 package me.grondag.clearskies.mixin;
 
-import net.minecraft.client.Minecraft;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.util.CubicSampler;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,29 +31,54 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {
 
-    @ModifyVariable(method = "setupColor", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/util/CubicSampler;gaussianSampleVec3(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/util/CubicSampler$Vec3Fetcher;)Lnet/minecraft/world/phys/Vec3;"), ordinal = 2)
-    private static Vec3 onSampleColor(Vec3 value) {
-        Minecraft minecraft = Minecraft.getInstance();
-        ClientLevel world = minecraft.level;
-
-        if (world != null && world.dimensionType().hasSkyLight()) {
-            return world.getSkyColor(minecraft.gameRenderer.getMainCamera().getPosition(), minecraft.getFrameTime());
+    @WrapOperation(
+            method = "setupColor",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/CubicSampler;gaussianSampleVec3(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/util/CubicSampler$Vec3Fetcher;)Lnet/minecraft/world/phys/Vec3;"
+            )
+    )
+    private static Vec3 onSampleColor(
+            Vec3 vec3, CubicSampler.Vec3Fetcher vec3Fetcher, Operation<Vec3> original,
+            @Local(ordinal = 0) Vec3 skyColor, @Local(argsOnly = true) ClientLevel level
+    ) {
+        if (level.dimensionType().hasSkyLight()) {
+            return skyColor;
         } else {
-            return value;
+            return original.call(vec3, vec3Fetcher);
         }
     }
 
-    @ModifyVariable(method = "setupColor", at = @At(value = "INVOKE_ASSIGN", target = "Lcom/mojang/math/Vector3f;dot(Lcom/mojang/math/Vector3f;)F"), ordinal = 7)
+    @ModifyVariable(
+            method = "setupColor",
+            at = @At(
+                    value = "INVOKE_ASSIGN",
+                    target = "Lorg/joml/Vector3f;dot(Lorg/joml/Vector3fc;)F"
+            ),
+            ordinal = 7
+    )
     private static float afterPlaneDot(float dotProduct) {
         return 0;
     }
 
-    @Redirect(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getRainLevel(F)F"))
+    @Redirect(
+            method = "setupColor",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/multiplayer/ClientLevel;getRainLevel(F)F"
+            )
+    )
     private static float onGetRainLevel(ClientLevel world, float tickDelta) {
         return 0;
     }
 
-    @Redirect(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getThunderLevel(F)F"))
+    @Redirect(
+            method = "setupColor",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/multiplayer/ClientLevel;getThunderLevel(F)F"
+            )
+    )
     private static float onGetThunderLevel(ClientLevel world, float tickDelta) {
         return 0;
     }
