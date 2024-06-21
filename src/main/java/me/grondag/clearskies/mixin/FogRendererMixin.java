@@ -23,10 +23,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.util.CubicSampler;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {
@@ -49,37 +49,37 @@ public class FogRendererMixin {
         }
     }
 
-    @ModifyVariable(
+    @WrapOperation(
             method = "setupColor",
             at = @At(
-                    value = "INVOKE_ASSIGN",
-                    target = "Lorg/joml/Vector3f;dot(Lorg/joml/Vector3fc;)F"
-            ),
-            ordinal = 7
+                    value = "INVOKE",
+                    target = "Lorg/joml/Vector3f;dot(Lorg/joml/Vector3fc;)F",
+                    remap = false
+            )
     )
-    private static float afterPlaneDot(float dotProduct) {
-        return 0;
+    private static float afterPlaneDot(Vector3f instance, Vector3fc v, Operation<Float> original) {
+        return 0f;
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "setupColor",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/multiplayer/ClientLevel;getRainLevel(F)F"
             )
     )
-    private static float onGetRainLevel(ClientLevel world, float tickDelta) {
-        return 0;
+    private static float onGetRainLevel(ClientLevel instance, float v, Operation<Float> original) {
+        return 0f;
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "setupColor",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/multiplayer/ClientLevel;getThunderLevel(F)F"
             )
     )
-    private static float onGetThunderLevel(ClientLevel world, float tickDelta) {
-        return 0;
+    private static float onGetThunderLevel(ClientLevel instance, float v, Operation<Float> original) {
+        return 0f;
     }
 }
