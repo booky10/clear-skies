@@ -1,8 +1,8 @@
 import java.io.ByteArrayOutputStream
 
 plugins {
-	id("fabric-loom") version "0.10-SNAPSHOT"
-	`maven-publish`
+	id("fabric-loom") version "1.7-SNAPSHOT"
+	id("maven-publish")
 }
 
 fun getGitCommit(): String {
@@ -19,24 +19,23 @@ version = "1.5.1+fabric.${getGitCommit()}"
 group = "me.grondag"
 
 dependencies {
-	minecraft("com.mojang:minecraft:1.18.1")
+	minecraft("com.mojang:minecraft:1.21")
 	mappings(loom.officialMojangMappings())
 
-	modImplementation("net.fabricmc:fabric-loader:0.12.6")
+	modImplementation("net.fabricmc:fabric-loader:0.15.11")
 }
 
 java {
 	withSourcesJar()
-	withJavadocJar()
-
 	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(17))
+		languageVersion = JavaLanguageVersion.of(21)
+		vendor = JvmVendorSpec.ADOPTIUM
 	}
 }
 
 publishing {
 	publications.create<MavenPublication>("maven") {
-		artifactId = project.name.toLowerCase()
+		artifactId = project.name.lowercase()
 		from(components["java"])
 	}
 }
@@ -51,7 +50,7 @@ tasks {
 
 	withType<JavaCompile>() {
 		options.encoding = Charsets.UTF_8.name()
-		options.release.set(17)
+		options.release = 21
 	}
 
 	jar {
