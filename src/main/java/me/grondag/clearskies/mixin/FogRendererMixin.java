@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class FogRendererMixin {
 
     @WrapOperation(
-            method = "setupColor",
+            method = "computeFogColor",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/CubicSampler;gaussianSampleVec3(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/util/CubicSampler$Vec3Fetcher;)Lnet/minecraft/world/phys/Vec3;"
@@ -50,7 +50,7 @@ public class FogRendererMixin {
     }
 
     @WrapOperation(
-            method = "setupColor",
+            method = "computeFogColor",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/joml/Vector3f;dot(Lorg/joml/Vector3fc;)F",
@@ -62,7 +62,7 @@ public class FogRendererMixin {
     }
 
     @WrapOperation(
-            method = "setupColor",
+            method = "computeFogColor",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/multiplayer/ClientLevel;getRainLevel(F)F"
@@ -73,7 +73,7 @@ public class FogRendererMixin {
     }
 
     @WrapOperation(
-            method = "setupColor",
+            method = "computeFogColor",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/multiplayer/ClientLevel;getThunderLevel(F)F"

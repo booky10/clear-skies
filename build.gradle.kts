@@ -1,7 +1,7 @@
 import java.io.ByteArrayOutputStream
 
 plugins {
-	id("fabric-loom") version "1.7-SNAPSHOT"
+	id("fabric-loom") version "1.9-SNAPSHOT"
 	id("maven-publish")
 }
 
@@ -15,14 +15,14 @@ fun getGitCommit(): String {
 }
 
 val archivesBaseName = "clearskies"
-version = "1.5.1+fabric.${getGitCommit()}"
+version = "1.5.2+fabric.${getGitCommit()}"
 group = "me.grondag"
 
 dependencies {
-	minecraft("com.mojang:minecraft:1.21")
+	minecraft("com.mojang:minecraft:1.21.4")
 	mappings(loom.officialMojangMappings())
 
-	modImplementation("net.fabricmc:fabric-loader:0.15.11")
+	modImplementation("net.fabricmc:fabric-loader:0.16.10")
 }
 
 java {
