@@ -1,17 +1,13 @@
-import java.io.ByteArrayOutputStream
-
 plugins {
 	id("fabric-loom") version "1.9-SNAPSHOT"
 	id("maven-publish")
 }
 
 fun getGitCommit(): String {
-	val stdout = ByteArrayOutputStream()
-	exec {
+	val exec = providers.exec {
 		commandLine("git", "rev-parse", "--short", "HEAD")
-		standardOutput = stdout
 	}
-	return stdout.toString().trim()
+	return exec.standardOutput.asText.get().trim()
 }
 
 val archivesBaseName = "clearskies"
