@@ -40,10 +40,10 @@ public class FogRendererMixin {
     )
     private static Vec3 onSampleColor(
             Vec3 vec3, CubicSampler.Vec3Fetcher vec3Fetcher, Operation<Vec3> original,
-            @Local(ordinal = 0) Vec3 skyColor, @Local(argsOnly = true) ClientLevel level
+            @Local(ordinal = 1) int skyColor, @Local(argsOnly = true) ClientLevel level
     ) {
         if (level.dimensionType().hasSkyLight()) {
-            return skyColor;
+            return Vec3.fromRGB24(skyColor);
         } else {
             return original.call(vec3, vec3Fetcher);
         }
